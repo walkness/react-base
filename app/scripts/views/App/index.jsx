@@ -17,6 +17,12 @@ const App = (props, context) => {
         htmlAttributes={{
           lang: context.intl.locale,
         }}
+        meta={[
+          { charset: 'utf-8' },
+          { 'http-equiv': 'Content-type', content: 'text/html; charset=utf-8' },
+          { 'http-equiv': 'x-ua-compatible', content: 'ie=edge' },
+          { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        ]}
       />
 
         { props.children }

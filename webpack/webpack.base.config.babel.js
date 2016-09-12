@@ -12,7 +12,7 @@ export default {
 
   output: {
     path: path.resolve(__dirname, '../app/bundles/client/'),
-    filename: 'bundle.js',
+    filename: 'scripts/[name]-[hash].js',
   },
 
   module: {

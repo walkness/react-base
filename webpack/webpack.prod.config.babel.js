@@ -7,7 +7,6 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import config from './webpack.base.config.babel';
 
 config.output.path = path.resolve('../app/dist');
-config.output.filename = 'scripts/[name]-[hash].js';
 config.output.publicPath = '/static/';
 config.output.libraryTarget = 'umd';
 
