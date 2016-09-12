@@ -9,8 +9,6 @@ import createSagaMiddleware from 'redux-saga';
 import ga from 'react-ga';
 import { AppContainer } from 'react-hot-loader';
 
-import 'bootstrap-loader';
-
 import * as reducers from './reducers';
 import rootSaga from './sagas';
 

@@ -16,8 +16,6 @@ export default {
   },
 
   module: {
-    noParse: [/braintree-web/],
-
     loaders: [
       {
         test: /.*\.(gif|png|jpe?g|svg)$/i,
@@ -27,16 +25,8 @@ export default {
         ],
       },
       {
-        test: /jsmediatags\/.+\.js$/,
-        loaders: ['babel'],
-      },
-      {
         test: /\.(woff2?|ttf|eot)$/,
         loaders: ['url?limit=10000&name=fonts/[name].[ext]'],
-      },
-      {
-        test: /\.md$/,
-        loader: 'html!markdown?gfm=false',
       },
     ],
   },
