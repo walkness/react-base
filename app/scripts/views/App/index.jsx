@@ -1,36 +1,37 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { intlShape } from 'react-intl';
 
 
-class App extends Component {
+const App = (props, context) => {
+  const routeName = props.children.props.route.name;
 
-  static contextTypes = {
-    intl: intlShape.isRequired,
-  };
+  return (
+    <div id='app' className={routeName}>
 
-  render() {
-    const routeName = this.props.children.props.route.name;
+      <Helmet
+        title=''
+        defaultTitle=''
+        titleTemplate='%s | '
+        htmlAttributes={{
+          lang: context.intl.locale,
+        }}
+      />
 
-    return (
-      <div id='app' className={routeName}>
+        { props.children }
 
-        <Helmet
-          title=''
-          defaultTitle=''
-          titleTemplate='%s | '
-          htmlAttributes={{
-            'lang': this.context.intl.locale,
-          }} />
+    </div>
+  );
+};
 
-          { this.props.children }
+App.propTypes = {
+  children: PropTypes.node,
+};
 
-      </div>
-    );
-  }
-
-}
+App.contextTypes = {
+  intl: intlShape.isRequired,
+};
 
 const mapStateToProps = (state) => ({
 });

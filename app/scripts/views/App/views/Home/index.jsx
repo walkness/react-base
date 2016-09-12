@@ -1,16 +1,4 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 
 
-class Home extends Component {
-  render() {
-    return <div/>
-  }
-}
-
-const mapStateToProps = (state) => ({
-});
-
-export default connect(
-  mapStateToProps, {
-  })(Home);
+export default () => <h1>It works!</h1>;
