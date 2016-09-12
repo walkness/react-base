@@ -1,10 +1,12 @@
 env
 *.DS_Store
 *.pyc
+*.log
 __pycache__
 .idea
 node_modules/
 .sass-cache/
 app/dist/
+app/bundles/
 webpack-stats.json
 webpack-stats-prod.json

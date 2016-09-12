@@ -1,5 +1,7 @@
 {
-  "extends": "airbnb/base",
+  "extends": "airbnb",
+
+  "parser": "babel-eslint",
 
   "rules": {
     "valid-jsdoc": [2, {
@@ -10,5 +12,9 @@
       }
     }],
     "func-names": 0,
+    "jsx-quotes": [2, "prefer-single"],
+    "no-underscore-dangle": [2, {
+      "allowAfterThis": true
+    }]
   }
 }
