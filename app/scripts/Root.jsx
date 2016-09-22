@@ -12,7 +12,7 @@ const logPageView = () => {
   ga.pageview(window.location.pathname);
 };
 
-const routes = getRoutes();
+const routes = getRoutes({});
 
 const Root = ({ store, server, renderProps }) => (
   <Provider store={store}>
