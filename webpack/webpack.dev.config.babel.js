@@ -38,8 +38,7 @@ config.module.loaders.push(
   },
   {
     test: /\.scss$/,
-    exclude: /node_modules|\.tmp|vendor/,
-    loader: 'style-loader!css-loader!postcss-loader!sass-loader!sass-resources-loader',
+    loader: 'style-loader!css-loader?sourceMap!postcss-loader!sass-loader?sourceMap',
   },
 );
 

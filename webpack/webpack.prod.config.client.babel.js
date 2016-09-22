@@ -9,7 +9,7 @@ import settings from './universal-webpack-settings.prod';
 import configuration from './webpack.prod.config.babel';
 
 configuration.plugins.unshift(
-  new Clean(['app/dist'], {
+  new Clean(['app/dist/client'], {
     root: path.resolve(__dirname, '../'),
   }),
 

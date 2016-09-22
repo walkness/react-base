@@ -19,8 +19,17 @@ export default {
     loaders: [
       {
         test: /.*\.(gif|png|jpe?g|svg)$/i,
+        exclude: /images\/favicon\//,
         loaders: [
           'url?limit=10000?hash=sha512&digest=hex&name=images/[name]-[hash].[ext]',
+          'image-webpack?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}', // eslint-disable-line max-len
+        ],
+      },
+      {
+        test: /.*\.(gif|png|jpe?g|svg)$/i,
+        include: /images\/favicon\//,
+        loaders: [
+          'file?hash=sha512&digest=hex&name=images/favicon/[name]-[hash].[ext]',
           'image-webpack?{progressive:true, optimizationLevel: 7, interlaced: false, pngquant:{quality: "65-90", speed: 4}}', // eslint-disable-line max-len
         ],
       },
