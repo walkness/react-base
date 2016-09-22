@@ -4,14 +4,14 @@ import 'react-hot-loader/patch';
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware from 'redux-saga';
+import { createStore, applyMiddleware, compose } from 'redux';
+import createSagaMiddleware, { END } from 'redux-saga';
 import ga from 'react-ga';
 import { AppContainer } from 'react-hot-loader';
 
 import 'bootstrap-loader';
 
-import * as reducers from './reducers';
+import reducer from './reducers';
 import rootSaga from './sagas';
 
 import Root from './Root';
@@ -19,7 +19,6 @@ import Root from './Root';
 
 const initialState = window.__INITIAL_STATE__; // eslint-disable-line no-underscore-dangle
 
-const reducer = combineReducers(reducers);
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   reducer,
@@ -29,6 +28,17 @@ const store = createStore(
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
+
+store.close = () => store.dispatch(END);
+
+if (module.hot) {
+  module.hot.accept('./reducers', () => {
+    const nextReducer = require('./reducers').default; // eslint-disable-line global-require
+
+    store.replaceReducer(nextReducer);
+  });
+}
+
 sagaMiddleware.run(rootSaga);
 
 ga.initialize('UA-XXXXXXXX-X');
@@ -52,11 +62,9 @@ function runApp() {
       );
     });
 
-    const orgError = console.error; // eslint-disable-line no-console
     console.error = (message) => { // eslint-disable-line no-console
-      if (message && message.indexOf('You cannot change <Router routes>;') === -1) {
-        // Log the error as normally
-        orgError.apply(console, [message]);
+      if (message && message.indexOf('You cannot change <Router routes>;') !== -1) {
+        return;
       }
     };
   }

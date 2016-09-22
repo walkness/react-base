@@ -1,11 +1,10 @@
 /* globals window document */
 
 import React, { PropTypes } from 'react';
-import { Router, browserHistory } from 'react-router';
+import { Router, RouterContext, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import ga from 'react-ga';
-import 'bootstrap-loader';
 
 import getRoutes from './config/routes';
 
@@ -15,12 +14,20 @@ const logPageView = () => {
 
 const routes = getRoutes();
 
-const Root = ({ store }) => (
+const Root = ({ store, server, renderProps }) => (
   <Provider store={store}>
 
     <IntlProvider locale='en'>
 
-      <Router history={browserHistory} onUpdate={logPageView} routes={routes} />
+    { server ?
+      <RouterContext {...renderProps} />
+    :
+      <Router
+        history={browserHistory}
+        onUpdate={logPageView}
+        routes={routes}
+      />
+    }
 
     </IntlProvider>
 
@@ -29,6 +36,8 @@ const Root = ({ store }) => (
 
 Root.propTypes = {
   store: PropTypes.object.isRequired,
+  server: PropTypes.bool,
+  renderProps: PropTypes.object,
 };
 
 export default Root;
