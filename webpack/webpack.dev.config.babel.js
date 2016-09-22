@@ -3,7 +3,6 @@
 import os from 'os';
 import path from 'path';
 import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import config from './webpack.base.config.babel';
 
@@ -30,8 +29,6 @@ config.plugins = config.plugins.concat([
       RENDER_SERVER_PORT: 9009,
     },
   }),
-
-  new ExtractTextPlugin('styles/[name].css'),
 ]);
 
 config.module.loaders.push(
@@ -42,7 +39,7 @@ config.module.loaders.push(
   {
     test: /\.scss$/,
     exclude: /node_modules|\.tmp|vendor/,
-    loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!sass-loader!sass-resources-loader'), // eslint-disable-line max-len
+    loader: 'style-loader!css-loader!postcss-loader!sass-loader!sass-resources-loader',
   },
 );
 

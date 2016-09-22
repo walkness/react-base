@@ -30,6 +30,8 @@
     "eslint-plugin-meteor": "^4.0.0",
     "eslint-plugin-react": "^6.2.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-harddisk-plugin": "0.0.2",
+    "html-webpack-plugin": "^2.22.0",
     "image-loader": "0.0.1",
     "image-webpack-loader": "^1.6.3",
     "json5": "^0.5.0",

@@ -1,16 +1,18 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+
+import yesImg from '../../../../../images/yes.png';
 
 
-class Home extends Component {
-  render() {
-    return <div/>
-  }
-}
+export default () => (
+  <main className='container-fluid'>
 
-const mapStateToProps = (state) => ({
-});
+    <div className='jumbotron' style={{ marginTop: '15px', textAlign: 'center' }}>
 
-export default connect(
-  mapStateToProps, {
-  })(Home);
+      <h1>It works!</h1>
+
+      <img src={yesImg} alt='Yes!' />
+
+    </div>
+
+  </main>
+);
