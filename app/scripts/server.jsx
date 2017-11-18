@@ -1,30 +1,28 @@
 import 'babel-polyfill';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { match } from 'react-router';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware, { END } from 'redux-saga';
 import express from 'express';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import Helmet from 'react-helmet';
 
-import defaultInitialState from './config/initialState';
-import reducer from './reducers';
+import defaultInitialState from 'config/initialState';
+import reducer from 'reducers';
+import rootSaga from 'sagas';
 
 import Root from './Root';
-import getRoutes from './config/routes';
+import Layout from './Layout';
 
 const PORT = process.env.RENDER_SERVER_PORT || 9009;
 
 const app = express();
 
 
-export default function () {
+export default function (parameters) {
   app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(cookieParser());
 
-  app.post('/render', function (req, res) { // eslint-disable-line prefer-arrow-callback
+  app.use(function (req, res) { // eslint-disable-line prefer-arrow-callback
     const body = req.body.props;
 
     const state = JSON.parse(JSON.stringify(defaultInitialState));
@@ -35,46 +33,56 @@ export default function () {
     store.runSaga = sagaMiddleware.run;
     store.close = () => store.dispatch(END);
 
-    const routes = getRoutes({ store, cookies: req.cookies });
+    const context = {};
+    const rootComponent = props => (
+      <Root
+        store={store}
+        renderProps={{
+          context,
+          location: req.body.path,
+        }}
+        server
+        {...props}
+      />
+    );
 
-    match({ routes, location: req.body.path }, (error, redirectLocation, renderProps) => {
-      if (error) {
-        res.json({
-          error,
-          markup: null,
-        });
-      } else if (redirectLocation) {
-        res.json({
-          redirect: redirectLocation,
-        });
-      } else if (renderProps) {
-        const rootComponent = <Root store={store} renderProps={renderProps} server />;
-        const html = renderToString(rootComponent);
-        store.close();
+    const renderLayout = props => (
+      <Layout
+        reactApp={renderToString(rootComponent(props))}
+        head={Helmet.rewind()}
+        chunks={parameters.chunks()}
+        initialState={JSON.stringify(store.getState())}
+      />
+    );
 
-        const helmet = Helmet.rewind();
+    if (context.url) {
+      res.redirect(context.url);
+    } else {
+      store.runSaga(rootSaga).done.then(() => {
+        res.status(200).send(renderToStaticMarkup(renderLayout()));
+      }).catch((e) => {
+        console.log(e.message);
+        if (e.statusCode) {
+          // const props = {};
+          // if (e.statusCode === 404) {
+          //   props.notFound = true;
+          // }
+          // res.status(e.statusCode).send(renderToStaticMarkup(renderLayout(props)));
+          if (e.to) {
+            res.redirect(e.statusCode, e.to);
+          } else if (e.error && e.error.non_field_errors) {
+            res.status(e.statusCode).send(e.error.non_field_errors);
+          } else {
+            res.status(e.statusCode).send(e.message);
+          }
+        } else {
+          res.status(500).send(e.message);
+        }
+      });
 
-        const head = {
-          title: helmet.title.toString(),
-          base: helmet.base.toString(),
-          meta: helmet.meta.toString(),
-          link: helmet.link.toString(),
-          script: helmet.script.toString(),
-          html: helmet.htmlAttributes.toString(),
-        };
-
-        res.json({
-          error: null,
-          markup: html,
-          initialState: store.getState(),
-          head,
-        });
-      } else {
-        res.json({
-          error: 'Path not found',
-        });
-      }
-    });
+      renderToString(rootComponent());
+      store.close();
+    }
   });
 
   app.listen(PORT, function () { // eslint-disable-line prefer-arrow-callback

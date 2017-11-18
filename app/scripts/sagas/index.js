@@ -1,4 +1,4 @@
-import { call, put, take, fork } from 'redux-saga/effects';
+import { all, call, put, take, fork } from 'redux-saga/effects';
 
 import * as types from '../constants/ActionTypes';
 import * as actions from '../actions';
@@ -15,6 +15,6 @@ function* callAPI(endpoint, action, args) {
 }
 
 export default function* rootSaga() {
-  yield [
-  ];
+  yield all([
+  ]);
 }

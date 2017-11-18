@@ -16,5 +16,13 @@
     "no-underscore-dangle": [2, {
       "allowAfterThis": true
     }]
+  },
+
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack/webpack.base.config.babel.js"
+      }
+    }
   }
 }

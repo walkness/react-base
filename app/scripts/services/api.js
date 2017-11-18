@@ -14,17 +14,17 @@ const getCsrf = () => {
 
 function baseApi(fullUrl, request) {
   return fetch(fullUrl, request).then(response =>
-      response.json().then(json => ({ json, response })).catch(ex => ({ ex, response })),
-    ).then(({ json, response }) => {
-      if (!response.ok) {
-        return Promise.reject(json);
-      }
+    response.json().then(json => ({ json, response })).catch(ex => ({ ex, response })),
+  ).then(({ json, response }) => {
+    if (!response.ok) {
+      return Promise.reject(json);
+    }
 
-      return json;
-    }).then(
-      response => ({ response }),
-      error => ({ error: error || 'no error message' }),
-    );
+    return json;
+  }).then(
+    response => ({ response }),
+    error => ({ error: error || 'no error message' }),
+  );
 }
 
 function callApi(endpoint) {

@@ -9,13 +9,15 @@ import createSagaMiddleware, { END } from 'redux-saga';
 import ga from 'react-ga';
 import { AppContainer } from 'react-hot-loader';
 
-import 'bootstrap-loader';
-
-import reducer from './reducers';
-import rootSaga from './sagas';
+import reducer from 'reducers';
+import rootSaga from 'sagas';
 
 import Root from './Root';
 
+import '../styles/main.scss';
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const IS_BROWSER = process.env.APP_ENV === 'browser';
 
 const initialState = window.__INITIAL_STATE__; // eslint-disable-line no-underscore-dangle
 
@@ -25,8 +27,8 @@ const store = createStore(
   initialState,
   compose(
     applyMiddleware(sagaMiddleware),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
-  )
+    window.devToolsExtension ? window.devToolsExtension() : f => f,
+  ),
 );
 
 store.close = () => store.dispatch(END);
@@ -41,14 +43,17 @@ if (module.hot) {
 
 sagaMiddleware.run(rootSaga);
 
-ga.initialize('UA-XXXXXXXX-X');
+if (IS_BROWSER && IS_PRODUCTION) {
+  ga.initialize('UA-XXXXXXXX-X');
+}
 
 function runApp() {
   render(
     <AppContainer>
       <Root store={store} />
     </AppContainer>,
-    document.getElementById('root'));
+    document.getElementById('root'),
+  );
 
   if (module.hot) {
     module.hot.accept('./Root.jsx', () => {
@@ -58,15 +63,9 @@ function runApp() {
         <AppContainer>
           <NextRoot store={store} />
         </AppContainer>,
-        document.getElementById('root')
+        document.getElementById('root'),
       );
     });
-
-    console.error = (message) => { // eslint-disable-line no-console
-      if (message && message.indexOf('You cannot change <Router routes>;') !== -1) {
-        return;
-      }
-    };
   }
 }
 
