@@ -14,7 +14,7 @@ const getCsrf = () => {
 
 function baseApi(fullUrl, request) {
   return fetch(fullUrl, request).then(response =>
-      response.json().then(json => ({ json, response })).catch(ex => ({ ex, response }))
+      response.json().then(json => ({ json, response })).catch(ex => ({ ex, response })),
     ).then(({ json, response }) => {
       if (!response.ok) {
         return Promise.reject(json);
@@ -23,7 +23,7 @@ function baseApi(fullUrl, request) {
       return json;
     }).then(
       response => ({ response }),
-      error => ({ error: error || 'no error message' })
+      error => ({ error: error || 'no error message' }),
     );
 }
 
